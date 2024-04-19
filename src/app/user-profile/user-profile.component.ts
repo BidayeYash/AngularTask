@@ -1,24 +1,32 @@
 import { Component } from '@angular/core';
-import { CommonService } from '../common.service';
-import { FormService } from '../form.service';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-
-import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, NgIf } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { RegisterComponent } from '../register/register.component';
-import { NavbarComponent } from '../navbar/navbar.component';
-
+import { Router } from '@angular/router';
+import { RegistrationModalComponent } from '../registration-modal/registration-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { FormService } from '../form.service';
+import { CommonService } from '../common.service';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, HttpClientModule, NgIf,NavbarComponent],
+  imports: [ReactiveFormsModule, CommonModule, HttpClientModule, NgIf],
   templateUrl: './user-profile.component.html',
-  styleUrl: './user-profile.component.css'
+  styleUrl: './user-profile.component.css',
 })
 export class UserProfileComponent {
+  showSmallMenu: boolean = false;
+
+  toggleNavbar() {
+    this.showSmallMenu = !this.showSmallMenu;
+  }
+  homePage() {
+    this.router.navigateByUrl('/home');
+  }
+  userProfilePage() {
+    this.router.navigateByUrl('/userProfile');
+  }
   users: any;
   constructor(
     private service: CommonService,
@@ -51,6 +59,8 @@ export class UserProfileComponent {
         profileImage: data.profileImage,
         tags: data.tags,
         addressType: data.addressType,
+        address1: data.address1,
+        address2: data.address2,
         companyAddress1: data.companyAddress1,
         companyAddress2: data.companyAddress2,
         firstname: data.firstname,
@@ -61,27 +71,16 @@ export class UserProfileComponent {
         state: data.state,
         email: data.email,
       });
-      this.service.DeleteUserByID(id).subscribe((data) => {
-        console.log(data);
-      });
     });
   }
 
   //d27d
   openDialog() {
-    const dialogRef = this.dialog.open(RegisterComponent);
+    const dialogRef = this.dialog.open(RegistrationModalComponent);
 
     dialogRef.afterClosed().subscribe((result) => {
       this.GetAllUsers();
       console.log(`Dialog result: ${result}`);
     });
-  }
-  showSmallMenu: boolean = false;
-
-  toggleNavbar() {
-    this.showSmallMenu = !this.showSmallMenu;
-  }
-  userProfilePage() {
-    this.router.navigateByUrl('/userInfo');
   }
 }

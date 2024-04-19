@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { HomepageComponent } from './homepage/homepage.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
-import { RegisterComponent } from './register/register.component';
+import { RegistrationModalComponent } from './registration-modal/registration-modal.component';
 
 export const routes: Routes = [
-    { path: 'home', component: HomeComponent },
-    { path: 'userInfo', component: UserProfileComponent},
-    { path: 'regModal', component: RegisterComponent },
+  { path: 'home', component: HomepageComponent },
+  { path: 'userProfile', component: UserProfileComponent },
+  { path: 'regModal', component: RegistrationModalComponent },
 ];

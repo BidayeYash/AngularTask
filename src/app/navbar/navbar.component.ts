@@ -19,7 +19,6 @@ export class NavbarComponent {
   }
   constructor(public router: Router) {}
   userProfilePage() {
-    this.router.navigateByUrl('/userInfo');
+    this.router.navigateByUrl('/userProfile');
   }
 }
-
