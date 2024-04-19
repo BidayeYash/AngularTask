@@ -1,0 +1,305 @@
+<head>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
+</head>
+<p mat-dialog-title class="title m-2 ml-4">Register</p>
+<i
+  class="fa fa-times-circle"
+  mat-dialog-close
+  style="font-size: 24px; color: aliceblue"
+  aria-hidden="true"
+></i>
+<mat-dialog-content class="mat-typography">
+  <!-- form Start -->
+  <form
+    class="form"
+    [formGroup]="regForm.registrationForm"
+    (ngSubmit)="registerUser()"
+  >
+   
+    <!-- image -->
+
+    <input
+      type="file"
+      formControlName="profileImage"
+      accept="image/*"
+      (change)="showPreview($event)"
+      (change)="onFileChange($event)"
+      (change)="selectFile($event)"
+    />
+    <div
+      style="color: red"
+      *ngIf="
+        regForm.registrationForm.get('profileImage').errors?.invalidImageSize
+      "
+    >
+      Image must be 310px by 325px.
+    </div>
+
+    <div
+      *ngIf="
+        regForm.registrationForm.get('profileImage')?.invalid &&
+        (regForm.registrationForm.get('profileImage')?.dirty ||
+          regForm.registrationForm.get('profileImage')?.touched)
+      "
+    >
+      <div
+        *ngIf="regForm.registrationForm.get('profileImage')?.errors?.['required']"
+        style="color: red"
+      >
+        Image is required.
+      </div>
+    </div>
+
+    <div
+      class="imagePreview"
+      *ngIf="
+        preview && preview !== 'https://www.w3schools.com/howto/img_avatar.png'
+      "
+    >
+      <img [src]="preview" [alt]="" class="preview" />
+    </div>
+
+    <!-- Image Preview -->
+
+    <div class="flex">
+      <label for="firstname">
+        <input
+          required=""
+          placeholder=""
+          type="text"
+          class="input"
+          formControlName="firstname"
+          maxlength="21"
+        />
+        <span>Firstname</span>
+        <small
+          style="color: red"
+          *ngIf="firstname.invalid && (firstname.dirty || firstname.touched)"
+          class="block p-error"
+        >
+          <div *ngIf="firstname.errors?.['required']">Name is required.</div>
+          <div *ngIf="firstname.errors?.['pattern']">Enter a valid Name</div>
+          <div *ngIf="firstname.errors?.['maxlength']">
+            characters should be less than 20
+          </div>
+        </small>
+      </label>
+
+      <label>
+        <input
+          required=""
+          placeholder=""
+          type="text"
+          class="input"
+          formControlName="lastname"
+        />
+        <span>Lastname</span>
+      </label>
+    </div>
+
+    <label>
+      <input
+        required=""
+        placeholder=""
+        type="email"
+        class="input"
+        formControlName="email"
+      />
+      <span>Email</span>
+    </label>
+    <div
+      *ngIf="
+        regForm.registrationForm.get('email')?.invalid &&
+        (regForm.registrationForm.get('email')?.dirty ||
+          regForm.registrationForm.get('email')?.touched)
+      "
+    >
+      <div
+        *ngIf="regForm.registrationForm.get('email')?.errors?.['required']"
+        style="color: red"
+      >
+        Email is required.
+      </div>
+      <div
+        *ngIf="regForm.registrationForm.get('email')?.errors?.['email']"
+        style="color: red"
+      >
+        Email must contain email format only ex-abcgmail.com.
+      </div>
+    </div>
+    <label>
+      <input
+        required=""
+        placeholder=""
+        type="number"
+        class="input"
+        formControlName="phoneNo"
+      />
+      <span>456-466-4561</span>
+    </label>
+    <div
+      *ngIf="
+        regForm.registrationForm.get('phoneNo')?.invalid &&
+        (regForm.registrationForm.get('phoneNo')?.dirty ||
+          regForm.registrationForm.get('phoneNo')?.touched)
+      "
+    >
+      <div
+        *ngIf="regForm.registrationForm.get('phoneNo')?.errors?.['required']"
+        style="color: red"
+      >
+        phoneNo is required.
+      </div>
+      <div
+        *ngIf="regForm.registrationForm.get('phoneNo')?.errors?.['pattern']"
+        style="color: red"
+      >
+        Invalid Entry
+      </div>
+    </div>
+    <!-- State and country input fields -->
+
+    <select formControlName="country" (change)="onCountryChange()">
+      <option value="" disabled selected>Select Country</option>
+      <option *ngFor="let country of countries" [value]="country">
+        {{ country }}
+      </option>
+    </select>
+    <div
+      *ngIf="
+        regForm.registrationForm.get('country')?.invalid &&
+        (regForm.registrationForm.get('country')?.dirty ||
+          regForm.registrationForm.get('country')?.touched)
+      "
+    >
+      <div
+        *ngIf="regForm.registrationForm.get('country')?.errors?.['required']"
+        style="color: red"
+      >
+        country is required.
+      </div>
+    </div>
+
+    <select formControlName="state">
+      <option value="" disabled selected>Select State</option>
+      <option *ngFor="let state of states[country?.value]" [value]="state">
+        {{ state }}
+      </option>
+    </select>
+
+    <!-- Age slider -->
+    <label for="age" class="ageLabel">Age</label>
+    <mat-slider
+      showTickMarks
+      min="0"
+      max="100"
+      step="1"
+      showTickMarks
+      discrete
+      [displayWith]="formatLabel"
+    >
+      <input matSliderThumb formControlName="age" />
+    </mat-slider>
+
+    <!-- t -->
+    <label for="addressType">Address Type:</label>
+    <select formControlName="addressType">
+      <option value="home">Home</option>
+      <option value="company">Company</option>
+    </select>
+
+    <div *ngIf="regForm.registrationForm.get('addressType').value === 'home'">
+      <label for="address1">Address 1:</label>
+      <input type="text" formControlName="address1" />
+      <label for="address2">Address 2:</label>
+      <input type="text" formControlName="address2" />
+    </div>
+
+    <div
+      *ngIf="regForm.registrationForm.get('addressType').value === 'company'"
+    >
+      <label for="companyAddress1">Company Address 1:</label>
+      <input type="text" formControlName="companyAddress1" />
+      <div
+        *ngIf="
+          regForm.registrationForm.get('address1')?.invalid &&
+          (regForm.registrationForm.get('address1')?.dirty ||
+            regForm.registrationForm.get('address1')?.touched)
+        "
+      >
+        <div
+          *ngIf="regForm.registrationForm.get('address1')?.errors?.['required']"
+          style="color: red"
+        >
+          address1 is required.
+        </div>
+      </div>
+      <div
+        *ngIf="
+          regForm.registrationForm.get('address2')?.invalid &&
+          (regForm.registrationForm.get('address2')?.dirty ||
+            regForm.registrationForm.get('address2')?.touched)
+        "
+      >
+        <div
+          *ngIf="regForm.registrationForm.get('address2')?.errors?.['required']"
+          style="color: red"
+        >
+          address2 is required.
+        </div>
+      </div>
+      <label for="companyAddress2">Company Address 2:</label>
+      <input type="text" formControlName="companyAddress2" />
+    </div>
+    <!--     -->
+    <mat-chip-grid #chipGrid aria-label="Enter fruits">
+      @for (fruit of fruits; track fruit) {
+      <mat-chip-row
+        (removed)="remove(fruit)"
+        [editable]="true"
+        (edited)="edit(fruit, $event)"
+        [aria-description]="'press enter to edit ' + fruit.name"
+      >
+        {{ fruit.name }}
+        <button matChipRemove [attr.aria-label]="'remove ' + fruit.name">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+      }
+      <input
+        class="matInput"
+        formControlName="tags"
+        placeholder="New fruit..."
+        [matChipInputFor]="chipGrid"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="addOnBlur"
+        (matChipInputTokenEnd)="add($event)"
+      />
+    </mat-chip-grid>
+
+    <!-- form end -->
+    <!-- toast -->
+
+    <!-- toast -->
+
+    <mat-dialog-actions align="end">
+      <button
+      style="
+          border-radius: 0;
+          background-color: #3aa5dc;
+          color: aliceblue;
+          margin-left: 30px;
+        "
+        class="submit mr-5 pl-5 pr-5"
+        type="submit"
+        (click)="userProfilePage()"
+        [disabled]="!this.regForm.registrationForm.valid"
+      >
+        Submit
+      </button>
+    </mat-dialog-actions>
+  </form>
+</mat-dialog-content>
